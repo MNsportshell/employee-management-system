@@ -4,35 +4,43 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="43cbf625-fbdc-4a8d-91e1-6a0b05827706" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Elizabeth Carlson-Hamme" beforeDir="false" afterPath="$PROJECT_DIR$/Elizabeth Carlson-Hamme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/James Doherty" beforeDir="false" afterPath="$PROJECT_DIR$/James Doherty" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Liban Madar" beforeDir="false" afterPath="$PROJECT_DIR$/Liban Madar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Natalia Johnson" beforeDir="false" afterPath="$PROJECT_DIR$/Natalia Johnson" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wisdom Azonwu" beforeDir="false" afterPath="$PROJECT_DIR$/Wisdom Azonwu" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appBasic/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/mvnw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appBasic/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/mvnw.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appBasic/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appBasic/src/main/java/com/example/appbasic/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/src/main/java/com/example/appbasic/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appBasic/src/main/java/com/example/appbasic/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/src/main/java/com/example/appbasic/HelloController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appBasic/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appBasic/src/main/resources/com/example/appbasic/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/src/main/resources/com/example/appbasic/hello-view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appBasic/target/classes/com/example/appbasic/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/target/classes/com/example/appbasic/hello-view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appBasic/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/target/classes/module-info.class" afterDir="false" />
+    <list default="true" id="43cbf625-fbdc-4a8d-91e1-6a0b05827706" name="Changes" comment="Update App file structure">
+      <change afterPath="$PROJECT_DIR$/appBasic/src/main/java/com/example/appbasic/Employee/Employee.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appBasic/src/main/java/com/example/appbasic/HR/PayrollManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appBasic/src/main/java/com/example/appbasic/Magager/Manager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appBasic/src/main/resources/com/example/appbasic/EmployeeDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appBasic/src/main/java/com/example/appbasic/SignIn.java" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/src/main/java/com/example/appbasic/SignIn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appBasic/target/classes/com/example/appbasic/SignIn.class" beforeDir="false" afterPath="$PROJECT_DIR$/appBasic/target/classes/com/example/appbasic/SignIn.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "libanmadar"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/MNsportshell/employee-management-system.git",
+    "accountId": "cda6f7d9-3bfc-40d5-a374-f6a88fab93de"
+  }
+}]]></component>
   <component name="ProjectColorInfo"><![CDATA[{
   "customColor": "",
   "associatedIndex": 7
@@ -49,7 +57,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "LibanMadar",
-    "kotlin-language-version-configured": "true"
+    "kotlin-language-version-configured": "true",
+    "last_directory_selection": "C:/Users/Liiba/Documents/ICS 370/employee-management-system/appBasic/src/main/resources/com/example/appbasic"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -61,6 +70,27 @@
       <option name="presentableId" value="Default" />
       <updated>1729013943044</updated>
     </task>
+    <task id="LOCAL-00001" summary="Update App file structure">
+      <option name="closed" value="true" />
+      <created>1729014784521</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1729014784521</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Update App file structure">
+      <option name="closed" value="true" />
+      <created>1729014798376</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1729014798376</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Update App file structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update App file structure" />
   </component>
 </project>
