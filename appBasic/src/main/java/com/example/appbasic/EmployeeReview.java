@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeReviewApp extends Application {
+public class EmployeeReview extends Application {
 
     private List<String> reviews = new ArrayList<>();
     private ListView<String> reviewListView = new ListView<>();
