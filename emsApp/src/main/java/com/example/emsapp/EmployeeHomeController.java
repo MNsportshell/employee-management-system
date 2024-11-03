@@ -31,6 +31,11 @@ public class EmployeeHomeController {
     public void initialize() {
         // Set the employee's name
         nameLabel.setText("Employee: " + employeeName);
+
+        // Add action listeners to buttons
+        checkPTOButton.setOnAction(event -> handleCheckPTOAction());
+        submitPTOButton.setOnAction(event -> handleSubmitPTOAction());
+        checkReviewButton.setOnAction(event -> handleCheckReviewAction());
     }
 
     @FXML
