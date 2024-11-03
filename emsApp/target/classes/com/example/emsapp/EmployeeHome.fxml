@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.emsapp.EmployeeHomeController"
-            prefHeight="400.0" prefWidth="600.0" >
+            prefHeight="400.0" prefWidth="600.0">
+
+    <VBox layoutX="50.0" layoutY="30.0" spacing="15" padding="20" prefWidth="500.0">
+        <!-- Title Label -->
+        <Label text="Employee Portal" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+        <!-- Employee Name Label -->
+        <Label fx:id="nameLabel" style="-fx-font-size: 16px;" />
+
+        <!-- Buttons Section -->
+        <HBox spacing="10">
+            <Button fx:id="checkPTOButton" text="Check PTO" onAction="#handleCheckPTOAction"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Button fx:id="submitPTOButton" text="Submit PTO" onAction="#handleSubmitPTOAction"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Button fx:id="checkReviewButton" text="Check Review" onAction="#handleCheckReviewAction"
+                    style="-fx-background-color: #FF5722; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <!-- Display Area for PTO Balance and Reviews -->
+        <TextArea fx:id="displayArea" prefHeight="200.0" prefWidth="460.0" wrapText="true"
+                  promptText="Information will be displayed here..."
+                  style="-fx-border-color: #BDBDBD; -fx-border-radius: 5; -fx-padding: 5; -fx-font-size: 14px;"/>
+    </VBox>
 
 </AnchorPane>
