@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.emsapp.EmployeeHomeController"
-      alignment="CENTER" style="-fx-background-color: #f5f5f5; -fx-border-color: #d3d3d3; -fx-border-width: 2;">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.emsapp.EmployeeReviewController">
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
 
-    <!-- Padding and Spacing -->
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-    <spacing>15</spacing>
+            <Label text="Employee Review" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
 
-    <!-- Employee Label Header -->
-    <Label fx:id="nameLabel" text="Employee: John Doe" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+            <GridPane hgap="10" vgap="10">
+                <Label text="Employee ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="employeeIdField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-    <!-- Buttons for actions wrapped in HBox for alignment -->
-    <HBox spacing="10" alignment="CENTER">
-        <Button fx:id="checkPTOButton" text="Check Available PTO Balance"
-                style="-fx-background-color: #4682b4; -fx-text-fill: white; -fx-font-weight: bold;"
-                onAction="#handleCheckPTOAction"/>
-        <Button fx:id="submitPTOButton" text="Submit PTO Request"
-                style="-fx-background-color: #4682b4; -fx-text-fill: white; -fx-font-weight: bold;"
-                onAction="#handleSubmitPTOAction"/>
-        <Button fx:id="checkReviewButton" text="Check Employee Review"
-                style="-fx-background-color: #4682b4; -fx-text-fill: white; -fx-font-weight: bold;"
-                onAction="#handleCheckReviewAction"/>
-    </HBox>
+                <Label text="Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="employeeNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-    <!-- TextArea for displaying information -->
-    <TextArea fx:id="displayArea" editable="false" prefHeight="150" wrapText="true"
-              style="-fx-font-family: 'Arial'; -fx-font-size: 14; -fx-text-fill: #555; -fx-background-color: #f9f9f9;"/>
-</VBox>
+                <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="employeeEmailField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Rating:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="ratingComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Comments:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextArea fx:id="commentsArea" GridPane.rowIndex="4" GridPane.columnIndex="1" prefRowCount="3" wrapText="true"/>
+            </GridPane>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Select File" onAction="#handleFileButtonAction" />
+                <Button text="Submit Review" onAction="#handleSubmitButtonAction" />
+                <Button text="Delete Selected Review" onAction="#handleDeleteButtonAction" />
+                <Button text="Edit Selected Review" onAction="#handleEditButtonAction" />
+            </HBox>
+
+            <Label text="Reviews:" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+            <ListView fx:id="reviewListView" prefHeight="150" />
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.emsapp.EmployeeReviewController" spacing="10" prefWidth="400" padding="20">
-    <Button text="Choose File" onAction="#handleFileButtonAction"/>
-    <TextField fx:id="employeeIdField" promptText="Enter Employee ID"/>
-    <TextField fx:id="employeeNameField" promptText="Enter Employee Name"/>
-    <TextField fx:id="employeeEmailField" promptText="Enter Employee Email"/>
-    <ComboBox fx:id="ratingComboBox" promptText="Select Rating (1-5)"/>
-    <TextArea fx:id="commentsArea" promptText="Enter Review Comments" wrapText="true"/>
-    <Button text="Submit Review" onAction="#handleSubmitButtonAction"/>
-    <Button text="Delete Selected Review" onAction="#handleDeleteButtonAction"/>
-    <ListView fx:id="reviewListView"/>
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.emsapp.EmployeeReviewController">
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <Label text="Employee Review" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+            <GridPane hgap="10" vgap="10">
+                <Label text="Employee ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="employeeIdField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="employeeNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="employeeEmailField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Rating:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="ratingComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Comments:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextArea fx:id="commentsArea" GridPane.rowIndex="4" GridPane.columnIndex="1" prefRowCount="3" wrapText="true"/>
+            </GridPane>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Select File" onAction="#handleFileButtonAction" />
+                <Button text="Submit Review" onAction="#handleSubmitButtonAction" />
+                <Button text="Delete Selected Review" onAction="#handleDeleteButtonAction" />
+                <Button text="Edit Selected Review" onAction="#handleEditButtonAction" />
+            </HBox>
+
+            <Label text="Reviews:" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+            <ListView fx:id="reviewListView" prefHeight="150" />
+        </VBox>
+    </center>
+</BorderPane>

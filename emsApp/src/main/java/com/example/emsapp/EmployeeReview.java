@@ -22,8 +22,14 @@ public class EmployeeReview extends Application {
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent root = loader.load();
 
-            Scene scene = new Scene(root, 400, 300);
+            // Set larger scene dimensions
+            Scene scene = new Scene(root, 800, 600); // Set width to 800 and height to 600
             primaryStage.setScene(scene);
+
+            // Optionally, set minimum window size
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

@@ -4,23 +4,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class EmployeeReviewController {
 
     private List<String> reviews = new ArrayList<>();
     private File selectedFile;
-    private Properties properties = new Properties();
-    private static final String PROPERTIES_FILE = "app.properties";
     private int reviewCounter = 1;
+    private int editIndex = -1; // Track the index of the review being edited
 
     @FXML private TextField employeeIdField;
     @FXML private TextField employeeNameField;
@@ -31,10 +26,36 @@ public class EmployeeReviewController {
 
     @FXML
     private void initialize() {
+        // Set up rating ComboBox
         for (int i = 1; i <= 5; i++) {
             ratingComboBox.getItems().add(i);
         }
+
+        // Enable text wrapping in ListView
+        reviewListView.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>() {
+                private final Label label = new Label();
+
+                {
+                    label.setWrapText(true); // Enable text wrapping
+                    label.setMaxWidth(350); // Set max width to wrap within ListView bounds
+                }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setGraphic(null);
+                    } else {
+                        label.setText(item);
+                        setGraphic(label);
+                    }
+                }
+            };
+            return cell;
+        });
     }
+
 
     @FXML
     private void handleFileButtonAction() {
@@ -59,9 +80,17 @@ public class EmployeeReviewController {
             showAlert("Please fill in all fields.");
         } else {
             String review = createReviewString(employeeId, employeeName, employeeEmail, rating, comments);
-            reviews.add(review);
-            reviewListView.getItems().add(review);
-            if (selectedFile != null) writeReviewToFile(review);
+
+            if (editIndex >= 0) { // If we're editing an existing review
+                reviews.set(editIndex, review);
+                reviewListView.getItems().set(editIndex, review);
+                editIndex = -1; // Reset after editing
+            } else {
+                reviews.add(review);
+                reviewListView.getItems().add(review);
+                if (selectedFile != null) writeReviewToFile(review);
+            }
+
             clearFields();
         }
     }
@@ -76,6 +105,27 @@ public class EmployeeReviewController {
         } else {
             showAlert("Please select a review to delete.");
         }
+    }
+
+    @FXML
+    private void handleEditButtonAction() {
+        String selectedReview = reviewListView.getSelectionModel().getSelectedItem();
+        if (selectedReview != null) {
+            editIndex = reviewListView.getSelectionModel().getSelectedIndex(); // Track the index for editing
+            populateFieldsForEditing(selectedReview);
+        } else {
+            showAlert("Please select a review to edit.");
+        }
+    }
+
+    private void populateFieldsForEditing(String review) {
+        // Assuming review format: "Review ID: R<id> | ID: <employeeId> | Name: <name> | Email: <email> | Rating <rating> - <comments> (Submitted on: <date>)"
+        String[] parts = review.split(" \\| ");
+        employeeIdField.setText(parts[1].split(": ")[1]);
+        employeeNameField.setText(parts[2].split(": ")[1]);
+        employeeEmailField.setText(parts[3].split(": ")[1]);
+        ratingComboBox.setValue(Integer.parseInt(parts[4].split(" ")[1]));
+        commentsArea.setText(parts[4].split(" - ")[1].split(" \\(Submitted")[0]);
     }
 
     private String createReviewString(String id, String name, String email, int rating, String comments) {
