@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class ViewReview extends Application {
 
@@ -19,12 +20,16 @@ public class ViewReview extends Application {
     public void start(Stage stage) {
         stage.setTitle("Employee Review");
 
-        // TextArea to display the review content
+        // TextArea to display the review content with enhanced readability
         TextArea reviewDisplay = new TextArea();
         reviewDisplay.setEditable(false);
+        reviewDisplay.setWrapText(true);
+        reviewDisplay.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 16; -fx-text-fill: #333; -fx-padding: 10;");
+        reviewDisplay.setPrefHeight(250);  // Increase height for more visible text
 
         // Button to open the file chooser
         Button chooseFileButton = new Button("Choose Review File");
+        chooseFileButton.setStyle("-fx-font-size: 14; -fx-padding: 5 10;");  // Increase font size and padding for button
 
         // File chooser configuration
         FileChooser fileChooser = new FileChooser();
@@ -38,8 +43,15 @@ public class ViewReview extends Application {
             File reviewFile = fileChooser.showOpenDialog(stage);
             if (reviewFile != null) {
                 try {
-                    String reviewContent = Files.readString(Path.of(reviewFile.getAbsolutePath()));
-                    reviewDisplay.setText(reviewContent);
+                    // Read all lines from the file and separate entries with "---" and spacing
+                    List<String> lines = Files.readAllLines(Path.of(reviewFile.getAbsolutePath()));
+                    StringBuilder reviewContent = new StringBuilder();
+                    for (String line : lines) {
+                        reviewContent.append(line).append("\n");
+                        // Add separator line between entries
+                        reviewContent.append("------------------------------------------------\n\n");
+                    }
+                    reviewDisplay.setText(reviewContent.toString());
                 } catch (IOException e) {
                     reviewDisplay.setText("Error reading review file: " + e.getMessage());
                 }
@@ -48,10 +60,10 @@ public class ViewReview extends Application {
             }
         });
 
-        // Set up the layout and scene
-        VBox layout = new VBox(10);
+        // Set up the layout and scene with spacing adjustments
+        VBox layout = new VBox(15);  // Increase spacing between elements for readability
         layout.getChildren().addAll(chooseFileButton, reviewDisplay);
-        Scene scene = new Scene(layout, 400, 300);
+        Scene scene = new Scene(layout, 500, 400);  // Increase overall window size
 
         stage.setScene(scene);
         stage.show();

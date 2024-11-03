@@ -48,7 +48,11 @@ public class HRManagerHome extends Application {
         employeeReviewsButton.setOnAction(event -> {
             EmployeeReview employeeReview = new EmployeeReview();
             Stage empReview = new Stage();
-            employeeReview.start(empReview);
+            try {
+                employeeReview.start(empReview);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
 
         // Employee Payroll action

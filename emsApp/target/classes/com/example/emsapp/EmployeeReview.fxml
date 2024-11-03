@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.emsapp.EmployeeReviewController" spacing="10" prefWidth="400" padding="20">
+    <Button text="Choose File" onAction="#handleFileButtonAction"/>
+    <TextField fx:id="employeeIdField" promptText="Enter Employee ID"/>
+    <TextField fx:id="employeeNameField" promptText="Enter Employee Name"/>
+    <TextField fx:id="employeeEmailField" promptText="Enter Employee Email"/>
+    <ComboBox fx:id="ratingComboBox" promptText="Select Rating (1-5)"/>
+    <TextArea fx:id="commentsArea" promptText="Enter Review Comments" wrapText="true"/>
+    <Button text="Submit Review" onAction="#handleSubmitButtonAction"/>
+    <Button text="Delete Selected Review" onAction="#handleDeleteButtonAction"/>
+    <ListView fx:id="reviewListView"/>
+</VBox>
