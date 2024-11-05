@@ -6,6 +6,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,7 +18,6 @@ public class PayrollManager extends Application {
 
     private List<String> payrollEntries;
     private int currentEntryIndex = 0;
-    private File currentFile;
     private TextArea entryArea;
     private ListView<String> entryListView;
 
@@ -23,7 +25,7 @@ public class PayrollManager extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Payroll Approval Manager");
 
-        Label instructionLabel = new Label("Open the file containing payroll data to review.");
+        Label instructionLabel = new Label("Open the Excel file containing payroll data to review.");
 
         entryArea = new TextArea();
         entryArea.setEditable(false);
@@ -42,8 +44,12 @@ public class PayrollManager extends Application {
         Button openFileButton = new Button("Open Payroll Data File");
         openFileButton.setOnAction(event -> openFile(primaryStage, approveButton, denyButton));
 
+        Button saveFileButton = new Button("Save Results to Text File");
+        saveFileButton.setOnAction(event -> saveToFile(primaryStage));
+        saveFileButton.setDisable(true);  // Initially disable until entries are loaded
+
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(instructionLabel, openFileButton, entryArea, approveButton, denyButton, entryListView);
+        layout.getChildren().addAll(instructionLabel, openFileButton, entryArea, approveButton, denyButton, entryListView, saveFileButton);
 
         Scene scene = new Scene(layout, 500, 500);
         primaryStage.setScene(scene);
@@ -53,27 +59,52 @@ public class PayrollManager extends Application {
     private void openFile(Stage stage, Button approveButton, Button denyButton) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Payroll Data File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
 
-        currentFile = fileChooser.showOpenDialog(stage);
-        if (currentFile != null) {
-            loadEntries(currentFile);
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            loadEntries(file);
             if (!payrollEntries.isEmpty()) {
                 currentEntryIndex = 0;
                 displayCurrentEntry();
                 updateListView();
                 approveButton.setDisable(false);
                 denyButton.setDisable(false);
+                ((Button) ((VBox) stage.getScene().getRoot()).getChildren().get(6)).setDisable(false);  // Enable Save button
             }
         }
     }
 
     private void loadEntries(File file) {
         payrollEntries = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                payrollEntries.add(line);
+        try (FileInputStream fis = new FileInputStream(file);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);  // Use the first sheet
+            Row headerRow = sheet.getRow(0);  // First row for column names
+            List<String> columnNames = new ArrayList<>();
+
+            // Extract column names from the header row
+            for (Cell cell : headerRow) {
+                cell.setCellType(CellType.STRING);  // Convert header cells to string for consistency
+                columnNames.add(cell.getStringCellValue());
+            }
+
+            // Iterate through each row starting from the second row
+            for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                if (row == null) continue;
+
+                StringBuilder entryBuilder = new StringBuilder();
+                for (int colIndex = 0; colIndex < columnNames.size(); colIndex++) {
+                    Cell cell = row.getCell(colIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    cell.setCellType(CellType.STRING);  // Convert all cells to string for simplicity
+                    String cellValue = cell.getStringCellValue();
+
+                    // Append column name and cell value to entry
+                    entryBuilder.append(columnNames.get(colIndex)).append(": ").append(cellValue).append(" ");
+                }
+                payrollEntries.add(entryBuilder.toString().trim());  // Add formatted entry
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,7 +128,6 @@ public class PayrollManager extends Application {
 
             String updatedEntry = status + ": " + entry;
             payrollEntries.set(currentEntryIndex, updatedEntry);
-            writeUpdatedEntriesToFile();
 
             currentEntryIndex++;
             displayCurrentEntry();
@@ -112,14 +142,25 @@ public class PayrollManager extends Application {
         entryListView.getItems().addAll(payrollEntries);
     }
 
-    private void writeUpdatedEntriesToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentFile))) {
-            for (String entry : payrollEntries) {
-                writer.write(entry);
-                writer.newLine();
+    private void saveToFile(Stage stage) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Payroll Data to Text File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        File saveFile = fileChooser.showSaveDialog(stage);
+
+        if (saveFile != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(saveFile))) {
+                for (String entry : payrollEntries) {
+                    writer.write(entry);
+                    writer.newLine();
+                }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "File saved successfully!", ButtonType.OK);
+                alert.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error saving file.", ButtonType.OK);
+                alert.showAndWait();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -127,4 +168,3 @@ public class PayrollManager extends Application {
         launch(args);
     }
 }
-

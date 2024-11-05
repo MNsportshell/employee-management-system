@@ -57,9 +57,9 @@ public class HRManagerHome extends Application {
 
         // Employee Payroll action
         payrollButton.setOnAction(event -> {
-            PayrollManager payrollApprovalManager = new PayrollManager();
-            Stage payrollStage = new Stage();
-            payrollApprovalManager.start(payrollStage);
+            EmployeePayroll payrollApprovalManager = new EmployeePayroll();
+            Stage payrollApprovalStage = new Stage();
+            payrollApprovalManager.start(payrollApprovalStage);
         });
 
         // Layout configuration

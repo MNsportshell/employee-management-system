@@ -121,12 +121,17 @@ public class EmployeeReviewController {
     private void populateFieldsForEditing(String review) {
         // Assuming review format: "Review ID: R<id> | ID: <employeeId> | Name: <name> | Email: <email> | Rating <rating> - <comments> (Submitted on: <date>)"
         String[] parts = review.split(" \\| ");
+        if (parts.length < 5) { // Ensure there are enough parts
+            showAlert("The selected review format is invalid.");
+            return;
+        }
         employeeIdField.setText(parts[1].split(": ")[1]);
         employeeNameField.setText(parts[2].split(": ")[1]);
         employeeEmailField.setText(parts[3].split(": ")[1]);
         ratingComboBox.setValue(Integer.parseInt(parts[4].split(" ")[1]));
         commentsArea.setText(parts[4].split(" - ")[1].split(" \\(Submitted")[0]);
     }
+
 
     private String createReviewString(String id, String name, String email, int rating, String comments) {
         LocalDateTime now = LocalDateTime.now();

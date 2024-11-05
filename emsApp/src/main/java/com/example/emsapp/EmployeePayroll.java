@@ -6,12 +6,10 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
-import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EmployeePayroll extends Application {
 
@@ -24,10 +22,10 @@ public class EmployeePayroll extends Application {
         primaryStage.setTitle("Employee Payroll System");
 
         // Label for file selection
-        Label instructionLabel = new Label("Select Excel file:");
+        Label instructionLabel = new Label("Select Text file:");
 
         // Button to open file chooser
-        Button selectFileButton = new Button("Select Excel File");
+        Button selectFileButton = new Button("Select Text File");
         Label selectedFileLabel = new Label("No file selected");
 
         // Button to generate and display payslips
@@ -40,14 +38,14 @@ public class EmployeePayroll extends Application {
         TextArea resultArea = new TextArea();
         resultArea.setEditable(false);
 
-        // FileChooser for selecting Excel and save files
+        // FileChooser for selecting text and save files
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
         final File[] selectedFile = {null};
         final File[] saveFile = {null};
 
-        // Action for selecting an Excel file
+        // Action for selecting a text file
         selectFileButton.setOnAction(event -> {
             selectedFile[0] = fileChooser.showOpenDialog(primaryStage);
             if (selectedFile[0] != null) {
@@ -61,14 +59,14 @@ public class EmployeePayroll extends Application {
         generatePayslipButton.setOnAction(event -> {
             if (selectedFile[0] != null) {
                 try {
-                    String payslipData = generatePayslipsFromExcel(selectedFile[0]);
+                    String payslipData = generatePayslipsFromText(selectedFile[0]);
                     resultArea.setText(payslipData);
                 } catch (IOException e) {
                     resultArea.setText("Error generating payslips.");
                     e.printStackTrace();
                 }
             } else {
-                resultArea.setText("Please select a valid Excel file first.");
+                resultArea.setText("Please select a valid text file first.");
             }
         });
 
@@ -92,7 +90,7 @@ public class EmployeePayroll extends Application {
                     resultArea.setText("No save location selected.");
                 }
             } else {
-                resultArea.setText("Please select a valid Excel file first.");
+                resultArea.setText("Please select a valid text file first.");
             }
         });
 
@@ -105,103 +103,100 @@ public class EmployeePayroll extends Application {
         primaryStage.show();
     }
 
-    // Method to get the cell value as a string
-    private String getCellValueAsString(Cell cell) {
-        switch (cell.getCellType()) {
-            case STRING:
-                return cell.getStringCellValue();
-            case NUMERIC:
-                if (DateUtil.isCellDateFormatted(cell)) {
-                    return cell.getDateCellValue().toString();
-                } else {
-                    return String.valueOf((int) cell.getNumericCellValue()); // Convert to int if numeric
-                }
-            case BOOLEAN:
-                return String.valueOf(cell.getBooleanCellValue());
-            default:
-                return "";
-        }
-    }
 
-    // Modified method to read the Excel file and generate payslips
-    private String generatePayslipsFromExcel(File excelFile) throws IOException {
+    private String generatePayslipsFromText(File textFile) throws IOException {
         StringBuilder payslipData = new StringBuilder();
-
-        FileInputStream fis = new FileInputStream(excelFile);
-        Workbook workbook = new XSSFWorkbook(fis);
-        Sheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> rowIterator = sheet.iterator();
-
         payslipData.append("Employee Payslips:\n");
 
-        while (rowIterator.hasNext()) {
-            Row row = rowIterator.next();
+        // Define a regex pattern to extract each field
+        Pattern pattern = Pattern.compile(
+                "Employee ID: (\\S+)\\s+" +
+                        "Employee Name: (\\S+ \\S+)\\s+" +
+                        "Hours Worked: (\\d+(\\.\\d+)?)\\s+" +
+                        "Overtime Hours: (\\d+(\\.\\d+)?)\\s+" +
+                        "Hourly Pay Rate: (\\d+(\\.\\d+)?)\\s+" +
+                        "Employee Email: (\\S+)"
+        );
 
-            if (row.getRowNum() == 0) continue;
+        try (BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
+            String line;
 
-            Cell idCell = row.getCell(0);
-            Cell nameCell = row.getCell(1);
-            Cell hoursWorkedCell = row.getCell(2);
-            Cell overtimeCell = row.getCell(3);
-            Cell payRateCell = row.getCell(4);
+            while ((line = reader.readLine()) != null) {
+                // Remove the "Approved:" or "Denied:" prefix
+                line = line.replaceFirst("^(Approved|Denied):\\s*", "");
 
-            if (idCell != null && nameCell != null && hoursWorkedCell != null && overtimeCell != null && payRateCell != null) {
-                String employeeID = getCellValueAsString(idCell);
-                String employeeName = nameCell.getStringCellValue();
-                double hoursWorked = hoursWorkedCell.getNumericCellValue();
-                double overtime = overtimeCell.getNumericCellValue();
-                double payRate = payRateCell.getNumericCellValue();
+                // Match the line against the pattern
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    // Extract matched groups
+                    String employeeID = matcher.group(1);
+                    String employeeName = matcher.group(2);
+                    double hoursWorked = Double.parseDouble(matcher.group(3));
+                    double overtime = Double.parseDouble(matcher.group(5));
+                    double payRate = Double.parseDouble(matcher.group(7));
+                    String employeeEmail = matcher.group(9);
 
-                double employeeSalary = (hoursWorked * payRate) + (overtime * payRate * 1.5);
+                    // Calculate salary
+                    double employeeSalary = (hoursWorked * payRate) + (overtime * payRate * 1.5);
 
-                payslipData.append("Employee ID: ").append(employeeID)
-                        .append(", Name: ").append(employeeName)
-                        .append(", Salary: $").append(employeeSalary)
-                        .append("\nPayslip generated for ").append(employeeName).append("\n\n");
+                    payslipData.append("Employee ID: ").append(employeeID)
+                            .append(", Name: ").append(employeeName)
+                            .append(", Email: ").append(employeeEmail)
+                            .append(", Salary: $").append(employeeSalary)
+                            .append("\nPayslip generated for ").append(employeeName).append("\n\n");
+                } else {
+                    System.out.println("Warning: Incorrect format for line: " + line);
+                }
             }
         }
-
-        fis.close();
-        workbook.close();
 
         return payslipData.toString();
     }
 
-    // New method to save generated payslips to a file
-    private void generatePayslipsToFile(File excelFile, File saveFile) throws IOException {
-        FileInputStream fis = new FileInputStream(excelFile);
-        Workbook workbook = new XSSFWorkbook(fis);
-        Sheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> rowIterator = sheet.iterator();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(saveFile))) {
 
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
 
-                if (row.getRowNum() == 0) continue;
+    private void generatePayslipsToFile(File textFile, File saveFile) throws IOException {
+        // Define the same regex pattern used in generatePayslipsFromText
+        Pattern pattern = Pattern.compile(
+                "Employee ID: (\\S+)\\s+" +
+                        "Employee Name: (\\S+ \\S+)\\s+" +
+                        "Hours Worked: (\\d+(\\.\\d+)?)\\s+" +
+                        "Overtime Hours: (\\d+(\\.\\d+)?)\\s+" +
+                        "Hourly Pay Rate: (\\d+(\\.\\d+)?)\\s+" +
+                        "Employee Email: (\\S+)"
+        );
 
-                Cell idCell = row.getCell(0);
-                Cell nameCell = row.getCell(1);
-                Cell hoursWorkedCell = row.getCell(2);
-                Cell overtimeCell = row.getCell(3);
-                Cell payRateCell = row.getCell(4);
+        try (BufferedReader reader = new BufferedReader(new FileReader(textFile));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(saveFile))) {
 
-                if (idCell != null && nameCell != null && hoursWorkedCell != null && overtimeCell != null && payRateCell != null) {
-                    String employeeID = getCellValueAsString(idCell);
-                    String employeeName = nameCell.getStringCellValue();
-                    double hoursWorked = hoursWorkedCell.getNumericCellValue();
-                    double overtime = overtimeCell.getNumericCellValue();
-                    double payRate = payRateCell.getNumericCellValue();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Remove the "Approved:" or "Denied:" prefix
+                line = line.replaceFirst("^(Approved|Denied):\\s*", "");
 
+                // Match the line against the pattern
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    // Extract matched groups
+                    String employeeID = matcher.group(1);
+                    String employeeName = matcher.group(2);
+                    double hoursWorked = Double.parseDouble(matcher.group(3));
+                    double overtime = Double.parseDouble(matcher.group(5));
+                    double payRate = Double.parseDouble(matcher.group(7));
+                    String employeeEmail = matcher.group(9);
+
+                    // Calculate salary
                     double employeeSalary = (hoursWorked * payRate) + (overtime * payRate * 1.5);
 
-                    writer.write("Employee ID: " + employeeID + ", Name: " + employeeName + ", Pay: $" + employeeSalary + "\n");
+                    // Write formatted payslip information to the file
+                    writer.write("Employee ID: " + employeeID + ", Name: " + employeeName +
+                            ", Email: " + employeeEmail + ", Pay: $" + employeeSalary + "\n");
+                } else {
+                    System.out.println("Warning: Incorrect format for line: " + line);
                 }
             }
         }
-
-        fis.close();
-        workbook.close();
     }
+
 }
