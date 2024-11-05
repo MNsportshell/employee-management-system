@@ -24,7 +24,8 @@ public class HRManagerHome extends Application {
         Button submitPTOButton = new Button("Submit PTO Request");
         Button approvePTOButton = new Button("Approve/Deny PTO Requests");
         Button employeeReviewsButton = new Button("View/Add Employee Reviews");
-        Button payrollButton = new Button("Employee Payroll");
+        Button payrollButton = new Button("Approve/Deny Payroll");
+        Button generatePayslipsButton = new Button("Generate Payslips"); // New button for generating payslips
 
         TextArea displayArea = new TextArea();
         displayArea.setEditable(false);
@@ -62,10 +63,17 @@ public class HRManagerHome extends Application {
             payrollApprovalManager.start(payrollStage);
         });
 
+        // Generate Payslips action
+        generatePayslipsButton.setOnAction(event -> {
+            EmployeePayroll employeePayroll = new EmployeePayroll();
+            Stage payrollStage = new Stage();
+            employeePayroll.start(payrollStage);
+        });
+
         // Layout configuration
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
-        layout.getChildren().addAll(titleLabel, submitPTOButton, approvePTOButton, employeeReviewsButton, payrollButton, displayArea);
+        layout.getChildren().addAll(titleLabel, submitPTOButton, approvePTOButton, employeeReviewsButton, payrollButton, generatePayslipsButton, displayArea);
 
         // Scene and stage setup
         Scene scene = new Scene(layout, 400, 400);
@@ -73,5 +81,3 @@ public class HRManagerHome extends Application {
         primaryStage.show();
     }
 }
-
-
