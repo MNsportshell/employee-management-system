@@ -1,5 +1,8 @@
 package com.example.emsapp;
 
+import com.example.emsapp.Roles.EmployeeRole;
+import com.example.emsapp.Roles.ManagerRole;
+import com.example.emsapp.Roles.HRManagerRole;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,16 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class SignIn extends Application {
-
-    // Dummy credentials for Employee, Manager, Payroll, and HR Manager
-    private static final String EMPLOYEE_USERNAME = "emp";
-    private static final String EMPLOYEE_PASSWORD = "pw";
-
-    private static final String MANAGER_USERNAME = "mgr";
-    private static final String MANAGER_PASSWORD = "pw";
-
-    private static final String HR_USERNAME = "hr";
-    private static final String HR_PASSWORD = "pw";
 
     public static void main(String[] args) {
         launch(args);
@@ -48,21 +41,18 @@ public class SignIn extends Application {
             String enteredUsername = usernameField.getText();
             String enteredPassword = passwordField.getText();
 
-            if (enteredUsername.equals(EMPLOYEE_USERNAME) && enteredPassword.equals(EMPLOYEE_PASSWORD)) {
+            // Use loginController to authenticate and assign the role
+            Object role = loginController.login(enteredUsername, enteredPassword);
+
+            if (role instanceof EmployeeRole) {
                 resultLabel.setText("Employee login successful!");
-                // Redirect to EmployeePTO
-                redirectToPTO(primaryStage);
-
-            } else if (enteredUsername.equals(MANAGER_USERNAME) && enteredPassword.equals(MANAGER_PASSWORD)) {
+                redirectToEmployeeHome(primaryStage);
+            } else if (role instanceof ManagerRole) {
                 resultLabel.setText("Manager login successful!");
-                // Redirect to EmployeeReview
-                redirectToManager(primaryStage);
-
-            } else if (enteredUsername.equals(HR_USERNAME) && enteredPassword.equals(HR_PASSWORD)) {
+                redirectToManagerHome(primaryStage);
+            } else if (role instanceof HRManagerRole) {
                 resultLabel.setText("HR Manager login successful!");
-                // Redirect to HRManager
-                redirectToHRManager(primaryStage);
-
+                redirectToHRManagerHome(primaryStage);
             } else {
                 resultLabel.setText("Login failed. Please check your credentials.");
             }
@@ -76,42 +66,37 @@ public class SignIn extends Application {
         Scene scene = new Scene(root, 300, 200);
         primaryStage.setScene(scene);
 
-        // Set the title of the window
-        primaryStage.setTitle("Login Form App");
-
         // Show the window
         primaryStage.show();
     }
 
-    // Method to redirect to EmployeePTO
-    private void redirectToPTO(Stage primaryStage) {
+    // Method to redirect to EmployeeHome
+    private void redirectToEmployeeHome(Stage primaryStage) {
         EmployeeHome employeeHome = new EmployeeHome();
         try {
-            employeeHome.start(primaryStage); // Redirect to PTO request screen
+            employeeHome.start(primaryStage); // Redirect to Employee Home screen
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // Method to redirect to EmployeeReview for Manager
-    private void redirectToManager(Stage primaryStage) {
+    // Method to redirect to ManagerHome
+    private void redirectToManagerHome(Stage primaryStage) {
         ManagerHome managerHome = new ManagerHome();
         try {
-            managerHome.start(primaryStage); // Redirect to Employee Review screen
+            managerHome.start(primaryStage); // Redirect to Manager Home screen
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // Method to redirect to HRManager
-    private void redirectToHRManager(Stage primaryStage) {
+    // Method to redirect to HRManagerHome
+    private void redirectToHRManagerHome(Stage primaryStage) {
         HRManagerHome hrManagerHome = new HRManagerHome();
         try {
-            hrManagerHome.start(primaryStage); // Redirect to HR Manager screen
+            hrManagerHome.start(primaryStage); // Redirect to HR Manager Home screen
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
-
-

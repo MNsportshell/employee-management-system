@@ -18,11 +18,11 @@ import javafx.stage.Stage;
 public class EmployeePTO extends Application {
 
     private static double empPTOBalance = 60.0;
-    private double availablePTOBalance = empPTOBalance;
-    private File selectedDirectory;  // Directory to save PTO requests
+    private double availablePTOBalance;
+    private File selectedDirectory;
 
     public EmployeePTO() {
-        // Default constructor logic (if needed)
+        this.availablePTOBalance = empPTOBalance;
     }
 
     public EmployeePTO(double availablePTOBalance) {
@@ -38,27 +38,23 @@ public class EmployeePTO extends Application {
         stage.setTitle("PTO Request Form");
         Scene scene = new Scene(new Group(), 600, 500);
 
-        // Text fields for Employee ID and Name
+        // UI Elements
         TextField employeeIdField = new TextField();
         employeeIdField.setPromptText("Enter Employee ID");
         TextField employeeNameField = new TextField();
         employeeNameField.setPromptText("Enter Employee Name");
 
-        // PTO type selection ComboBox
         ComboBox<String> ptoTypeComboBox = new ComboBox<>();
         ptoTypeComboBox.getItems().addAll("Vacation", "Sick Leave", "Personal Leave", "Other");
         ptoTypeComboBox.setPromptText("Select PTO Type");
 
-        // Date pickers for start and end dates
         DatePicker startDatePicker = new DatePicker();
         DatePicker endDatePicker = new DatePicker();
 
-        // Buttons
         Button chooseDirectoryButton = new Button("Choose Directory to Save Requests");
         Button submitButton = new Button("Submit Request");
         Label notification = new Label();
 
-        // Directory chooser to select a folder for saving requests
         chooseDirectoryButton.setOnAction(e -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Select Directory to Save PTO Requests");
@@ -70,7 +66,6 @@ public class EmployeePTO extends Application {
             }
         });
 
-        // Submit button action to save the PTO request in the selected directory
         submitButton.setOnAction(e -> {
             String employeeId = employeeIdField.getText();
             String employeeName = employeeNameField.getText();
@@ -82,11 +77,16 @@ public class EmployeePTO extends Application {
                     && startDate != null && endDate != null && selectedDirectory != null) {
 
                 int ptoHours = calculatePtoHours(startDate, endDate);
-                String record = "PTO request for ID: " + employeeId + ", Name: " + employeeName +
-                        " (" + selectedPtoType + ") from " + startDate + " to " + endDate +
-                        " (" + ptoHours + " hours)\n";
 
-                // Save the request as a new file in the selected directory
+                // Check if sufficient balance is available
+                if (ptoHours > availablePTOBalance) {
+                    notification.setText("Insufficient PTO balance.");
+                    return;
+                }
+
+                String record = String.format("PTO request for ID: %s, Name: %s (%s) from %s to %s (%d hours)%n",
+                        employeeId, employeeName, selectedPtoType, startDate, endDate, ptoHours);
+
                 String fileName = "PTO_Request_" + employeeId + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + ".txt";
                 File requestFile = new File(selectedDirectory, fileName);
 
@@ -101,7 +101,7 @@ public class EmployeePTO extends Application {
             }
         });
 
-        // Set up the layout
+        // Layout setup
         GridPane grid = new GridPane();
         grid.setVgap(10.0);
         grid.setHgap(10.0);
@@ -126,11 +126,8 @@ public class EmployeePTO extends Application {
         stage.show();
     }
 
-    // Calculate PTO hours by counting weekdays (Mon-Fri) only
-    private int calculatePtoHours(LocalDate startDate, LocalDate endDate) {
+    public int calculatePtoHours(LocalDate startDate, LocalDate endDate) {
         int ptoHours = 0;
-
-        // Iterate over the dates, adding 8 hours for each weekday
         LocalDate date = startDate;
         while (!date.isAfter(endDate)) {
             DayOfWeek dayOfWeek = date.getDayOfWeek();
@@ -139,7 +136,18 @@ public class EmployeePTO extends Application {
             }
             date = date.plusDays(1);
         }
-
         return ptoHours;
+    }
+
+    public String getPTOType() {
+        return "Vacation"; // placeholder
+    }
+
+    public LocalDate getStartDate() {
+        return LocalDate.now(); // placeholder
+    }
+
+    public LocalDate getEndDate() {
+        return LocalDate.now().plusDays(5); // placeholder
     }
 }
