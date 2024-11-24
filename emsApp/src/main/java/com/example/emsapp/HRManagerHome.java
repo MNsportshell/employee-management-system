@@ -26,6 +26,8 @@ public class HRManagerHome extends Application {
         Button employeeReviewsButton = new Button("View/Add Employee Reviews");
         Button payrollButton = new Button("Approve/Deny Payroll");
         Button generatePayslipsButton = new Button("Generate Payslips"); // New button for generating payslips
+        Button createEmployeeButton = new Button("Create Employee Account");
+
 
         TextArea displayArea = new TextArea();
         displayArea.setEditable(false);
@@ -70,10 +72,17 @@ public class HRManagerHome extends Application {
             employeePayroll.start(payrollStage);
         });
 
+        // Create Employee Account action
+        createEmployeeButton.setOnAction(event -> {
+            EmployeeCreation employeeCreation = new EmployeeCreation();
+            Stage createEmployeeStage = new Stage();
+            employeeCreation.start(createEmployeeStage);
+        });
+
         // Layout configuration
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
-        layout.getChildren().addAll(titleLabel, submitPTOButton, approvePTOButton, employeeReviewsButton, payrollButton, generatePayslipsButton, displayArea);
+        layout.getChildren().addAll(titleLabel, submitPTOButton, approvePTOButton, employeeReviewsButton, payrollButton, generatePayslipsButton, createEmployeeButton, displayArea);
 
         // Scene and stage setup
         Scene scene = new Scene(layout, 400, 400);
