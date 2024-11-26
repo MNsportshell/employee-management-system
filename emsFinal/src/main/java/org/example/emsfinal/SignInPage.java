@@ -64,10 +64,6 @@ public class SignInPage extends Application {
         primaryStage.show();
     }
 
-    /**
-     * Validates the username and password against the credentials.json file
-     * Returns the user's role if credentials are valid, otherwise null.
-     */
     private String validateCredentials(String username, String password) {
         JSONParser parser = new JSONParser();
         try (InputStream inputStream = getClass().getResourceAsStream("/credentials.json");
@@ -92,9 +88,6 @@ public class SignInPage extends Application {
         return null;
     }
 
-    /**
-     * Redirects the user to a specific page based on their role
-     */
     private void redirectToRolePage(Stage stage, String role) {
         switch (role) {
             case "Employee":
