@@ -16,16 +16,17 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class ManagerHome {
+public class ManagerHome extends EmployeeHome {
 
     private double ptoBalance = 40.0; // Default PTO balance for manager
     public String username; // Manager's username
 
-    // Constructor to pass the logged-in username
     public ManagerHome() {
-        this.username = username;
+        super();
+        this.username = username; // Set the username for the manager
     }
 
+    @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Manager Dashboard");
 
@@ -79,69 +80,8 @@ public class ManagerHome {
         primaryStage.show();
     }
 
-    // Method to open PTO window
-    private void openPTOWindow() {
-        Stage ptoStage = new Stage();
-        ptoStage.setTitle("PTO Management");
-
-        Label messageLabel = new Label();
-
-        // View PTO functionality
-        Button viewPTOButton = new Button("View PTO Balance");
-        viewPTOButton.setOnAction(e -> messageLabel.setText("PTO Balance: " + ptoBalance + " hours"));
-
-        // Request PTO functionality with date selection
-        Label requestPTOLabel = new Label("Submit PTO Request:");
-        DatePicker startDatePicker = new DatePicker();
-        startDatePicker.setPromptText("Start Date");
-        DatePicker endDatePicker = new DatePicker();
-        endDatePicker.setPromptText("End Date");
-
-        Button requestPTOButton = new Button("Request PTO");
-        requestPTOButton.setOnAction(e -> {
-            LocalDate startDate = startDatePicker.getValue();
-            LocalDate endDate = endDatePicker.getValue();
-
-            if (startDate == null || endDate == null) {
-                messageLabel.setText("Error: Please select both start and end dates.");
-            } else if (endDate.isBefore(startDate)) {
-                messageLabel.setText("Error: End date cannot be before start date.");
-            } else {
-                long days = ChronoUnit.DAYS.between(startDate, endDate) + 1; // Include both start and end dates
-                double totalRequestedHours = days * 8; // Assume 8 hours per day
-
-                if (totalRequestedHours > ptoBalance) {
-                    messageLabel.setText("Error: Not enough PTO balance.");
-                } else {
-                    ptoBalance -= totalRequestedHours;
-                    savePTORequestToFile(username, startDate, endDate, totalRequestedHours);
-                    messageLabel.setText("PTO request submitted for " + days + " days (" +
-                            totalRequestedHours + " hours). Remaining balance: " + ptoBalance + " hours.");
-                }
-            }
-        });
-
-        // Layout
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setVgap(10);
-        grid.setHgap(10);
-
-        grid.add(viewPTOButton, 0, 0);
-        grid.add(requestPTOLabel, 0, 1);
-        grid.add(startDatePicker, 0, 2);
-        grid.add(endDatePicker, 1, 2);
-        grid.add(requestPTOButton, 0, 3, 2, 1);
-        grid.add(messageLabel, 0, 4, 2, 1);
-
-        // Set scene and show stage
-        Scene scene = new Scene(grid, 400, 300);
-        ptoStage.setScene(scene);
-        ptoStage.show();
-    }
-
-    // Method to open PTO Requests Review window
-    private void openRequestReviewWindow() {
+    // Employee Reviews
+    void openRequestReviewWindow() {
         Stage reviewStage = new Stage();
         reviewStage.setTitle("PTO Requests Review");
 
@@ -201,7 +141,7 @@ public class ManagerHome {
     }
 
 
-    private void openEmployeeReviewWindow() {
+    void openEmployeeReviewWindow() {
         Stage reviewStage = new Stage();
         reviewStage.setTitle("Employee Reviews");
 
@@ -336,7 +276,6 @@ public class ManagerHome {
         }
     }
 
-
     private void loadEmployeeReviews(TextArea reviewList) {
         String filePath = "EmployeeReviews.json";
         JSONParser parser = new JSONParser();
@@ -360,7 +299,6 @@ public class ManagerHome {
             reviewList.setText("Error loading employee reviews: " + e.getMessage());
         }
     }
-
 
     private void saveEmployeeReviewToFile(String name, String id, int rating, String notes) {
         String filePath = "EmployeeReviews.json";
@@ -394,7 +332,6 @@ public class ManagerHome {
             System.out.println("Error writing to EmployeeReviews.json: " + e.getMessage());
         }
     }
-
 
     public void savePTORequestToFile(String username, LocalDate startDate, LocalDate endDate, double totalRequestedHours) {
         String filePath = "PTORequests.json";
@@ -529,8 +466,6 @@ public class ManagerHome {
         }
     }
 
-
-
     public void removeRequestFromFile(String selectedRequest) {
         String filePath = "PTORequests.json";
         JSONParser parser = new JSONParser();
@@ -567,7 +502,6 @@ public class ManagerHome {
         }
     }
 
-
     public void writeApprovedRequestToFile(JSONObject approvedRequest) {
         String filePath = "ApprovedPTO.json";
         JSONParser parser = new JSONParser();
@@ -588,11 +522,5 @@ public class ManagerHome {
         } catch (IOException e) {
             System.out.println("Error writing to ApprovedPTO.json: " + e.getMessage());
         }
-    }
-
-    private void logout(Stage primaryStage) {
-        // Start the SignInPage
-        SignInPage signInPage = new SignInPage(); // Assuming you have a SignInPage class
-        signInPage.start(primaryStage); // Restart the SignInPage in the same stage
     }
 }

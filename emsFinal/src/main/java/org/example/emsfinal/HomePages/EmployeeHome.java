@@ -108,7 +108,7 @@ public class EmployeeHome {
 
 
 
-    private void openPTOWindow() {
+    public void openPTOWindow() {
         Stage ptoStage = new Stage();
         ptoStage.setTitle("PTO Management");
 
@@ -195,7 +195,7 @@ public class EmployeeHome {
         }
     }
 
-    private void logout(Stage primaryStage) {
+    void logout(Stage primaryStage) {
         // Start the SignInPage
         SignInPage signInPage = new SignInPage(); // Assuming you have a SignInPage class
         signInPage.start(primaryStage); // Restart the SignInPage in the same stage
