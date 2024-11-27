@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class HRManagerHome extends ManagerHome {
+public class HRManagerHome extends ManagerHome implements HomeScreen {
 
     private double ptoBalance = 40.0; // Default PTO balance for manager
     public String username; // Manager's username
@@ -41,6 +41,9 @@ public class HRManagerHome extends ManagerHome {
 
         Button userManagementButton = new Button("User Management");
         userManagementButton.setOnAction(e -> openUserManagementWindow());
+
+        Button payrollButton = new Button("Payroll");
+        payrollButton.setOnAction(e -> openPayrollWindow("manager"));
 
         Button logoutButton = new Button("Logout");
         logoutButton.setOnAction(e -> logout(primaryStage));
@@ -69,7 +72,8 @@ public class HRManagerHome extends ManagerHome {
         grid.add(reviewRequestsButton, 0, 2);
         grid.add(employeeReviewButton, 0, 3);
         grid.add(userManagementButton, 0,4);
-        grid.add(logoutButton, 0, 5);
+        grid.add(payrollButton, 0, 5);
+        grid.add(logoutButton, 0, 6);
 
         Scene scene = new Scene(grid, 400, 300);
         primaryStage.setScene(scene);

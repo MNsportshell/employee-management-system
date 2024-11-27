@@ -12,6 +12,8 @@ import org.example.emsfinal.HomePages.ManagerHome;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.example.emsfinal.HomePages.HomeScreen;
+import org.example.emsfinal.HomePages.HomeScreenFactory;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -83,21 +85,19 @@ public class SignInPage extends Application {
     }
 
     private void redirectToRolePage(Stage stage, String role) {
-        switch (role) {
-            case "Employee":
-                new EmployeeHome().start(stage);
-                break;
-            case "Manager":
-                new ManagerHome().start(stage);
-                break;
-            case "HRManager":
-                new HRManagerHome().start(stage);
-                break;
-            default:
-                Label roleLabel = new Label("Role not recognized.");
-                Scene scene = new Scene(roleLabel, 400, 200);
-                stage.setScene(scene);
-                stage.show();
+
+        // Try-catch for the homescreen factory output upon user login
+        try {
+            HomeScreen homeScreen = HomeScreenFactory.createHomeScreen(role);
+            homeScreen.start(stage);
+        }
+
+        // Catch for if the role is incorrectly configured
+        catch (IllegalArgumentException e) {
+            Label roleLabel = new Label("Role not recognized: " + role);
+            Scene scene = new Scene(roleLabel, 400, 200);
+            stage.setScene(scene);
+            stage.show();
         }
     }
 
