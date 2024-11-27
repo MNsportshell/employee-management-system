@@ -23,7 +23,6 @@ public class HRManagerHome extends ManagerHome {
     private double ptoBalance = 40.0; // Default PTO balance for manager
     public String username; // Manager's username
 
-    // Constructor to pass the logged-in username
     public HRManagerHome() {
         this.username = username;
     }
@@ -31,27 +30,21 @@ public class HRManagerHome extends ManagerHome {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Manager Dashboard");
 
-        // Welcome message with username
         Label welcomeLabel = new Label("Welcome " + username + " to the Manager Dashboard!");
         Label messageLabel = new Label();
 
-        // PTO Button to open new window
         Button ptoButton = new Button("PTO");
         ptoButton.setOnAction(e -> openPTOWindow());
 
-        // PTO Request Review Button to open new window
         Button reviewRequestsButton = new Button("Review PTO Requests");
         reviewRequestsButton.setOnAction(e -> openRequestReviewWindow());
 
-        // User Management
         Button userManagementButton = new Button("User Management");
         userManagementButton.setOnAction(e -> openUserManagementWindow());
 
-        // Logout Button
         Button logoutButton = new Button("Logout");
         logoutButton.setOnAction(e -> logout(primaryStage));
 
-        // Approve/Deny PTO functionality
         Label approvePTOLabel = new Label("Review PTO Requests:");
         TextArea requestList = new TextArea();
         requestList.setEditable(false);
@@ -59,7 +52,6 @@ public class HRManagerHome extends ManagerHome {
         Button approveRequestButton = new Button("Approve");
         Button denyRequestButton = new Button("Deny");
 
-        // Submit Employee Review button
         Button employeeReviewButton = new Button("View/Submit Employee Reviews");
         employeeReviewButton.setOnAction(e -> openEmployeeReviewWindow());
 
@@ -67,7 +59,6 @@ public class HRManagerHome extends ManagerHome {
         approveRequestButton.setOnAction(e -> handleRequest(requestList, true, messageLabel));
         denyRequestButton.setOnAction(e -> handleRequest(requestList, false, messageLabel));
 
-        // Layout
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
@@ -80,7 +71,6 @@ public class HRManagerHome extends ManagerHome {
         grid.add(userManagementButton, 0,4);
         grid.add(logoutButton, 0, 5);
 
-        // Set the scene and show the stage
         Scene scene = new Scene(grid, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -90,7 +80,6 @@ public class HRManagerHome extends ManagerHome {
         Stage userStage = new Stage();
         userStage.setTitle("User Management");
 
-        // Labels and fields for user data
         Label usernameLabel = new Label("Username:");
         TextField usernameField = new TextField();
 
@@ -105,7 +94,6 @@ public class HRManagerHome extends ManagerHome {
 
         Label messageLabel = new Label();
 
-        // ComboBox to select a user
         ComboBox<String> userComboBox = new ComboBox<>();
         userComboBox.setPromptText("Select a user to edit");
         userComboBox.setOnAction(e -> {
@@ -115,12 +103,10 @@ public class HRManagerHome extends ManagerHome {
             }
         });
 
-        // Buttons for managing users
         Button addUserButton = new Button("Add User");
         Button editUserButton = new Button("Edit User");
         Button loadUsersButton = new Button("Load Users");
 
-        // Add user functionality
         addUserButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
@@ -136,7 +122,6 @@ public class HRManagerHome extends ManagerHome {
             }
         });
 
-        // Edit user functionality
         editUserButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
@@ -152,10 +137,8 @@ public class HRManagerHome extends ManagerHome {
             }
         });
 
-        // Load users functionality
         loadUsersButton.setOnAction(e -> loadUsers(userComboBox));
 
-        // Layout
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
@@ -181,7 +164,6 @@ public class HRManagerHome extends ManagerHome {
 
         grid.add(messageLabel, 0, 7, 2, 1);
 
-        // Set the scene and show the stage
         Scene scene = new Scene(grid, 600, 500);
         userStage.setScene(scene);
         userStage.show();
@@ -216,7 +198,6 @@ public class HRManagerHome extends ManagerHome {
         JSONParser parser = new JSONParser();
         JSONArray users;
 
-        // Load existing users from the file
         try (FileReader reader = new FileReader(filePath)) {
             Object obj = parser.parse(reader);
             users = (JSONArray) obj;
@@ -224,17 +205,14 @@ public class HRManagerHome extends ManagerHome {
             users = new JSONArray();
         }
 
-        // Create the new user object
         JSONObject newUser = new JSONObject();
         newUser.put("Username", username);
         newUser.put("Password", password);
         newUser.put("Role", role);
         newUser.put("Employee ID", employeeId);
 
-        // Add the user to the list
         users.add(newUser);
 
-        // Save back to the file
         try (FileWriter file = new FileWriter(filePath)) {
             file.write(users.toJSONString());
             file.flush();
@@ -248,7 +226,6 @@ public class HRManagerHome extends ManagerHome {
         JSONParser parser = new JSONParser();
         JSONArray users;
 
-        // Load existing users from the file
         try (FileReader reader = new FileReader(filePath)) {
             Object obj = parser.parse(reader);
             users = (JSONArray) obj;
@@ -256,7 +233,6 @@ public class HRManagerHome extends ManagerHome {
             users = new JSONArray();
         }
 
-        // Edit the user if it exists
         boolean userFound = false;
         for (Object obj : users) {
             JSONObject user = (JSONObject) obj;
@@ -273,7 +249,6 @@ public class HRManagerHome extends ManagerHome {
             System.out.println("User not found.");
         }
 
-        // Save back to the file
         try (FileWriter file = new FileWriter(filePath)) {
             file.write(users.toJSONString());
             file.flush();
@@ -307,7 +282,7 @@ public class HRManagerHome extends ManagerHome {
             for (Object userObj : users) {
                 JSONObject user = (JSONObject) userObj;
                 String username = (String) user.get("Username");
-                System.out.println("Loaded username: " + username); // Debugging
+                System.out.println("Loaded username: " + username);
                 userComboBox.getItems().add(username);
             }
             System.out.println("Total users loaded: " + userComboBox.getItems().size());

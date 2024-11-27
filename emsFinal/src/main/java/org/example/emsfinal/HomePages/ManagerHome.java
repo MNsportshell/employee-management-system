@@ -18,35 +18,31 @@ import java.time.temporal.ChronoUnit;
 
 public class ManagerHome extends EmployeeHome {
 
-    private double ptoBalance = 40.0; // Default PTO balance for manager
-    public String username; // Manager's username
+    private double ptoBalance = 40.0;
+    public String username;
 
     public ManagerHome() {
         super();
-        this.username = username; // Set the username for the manager
+        this.username = username;
     }
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Manager Dashboard");
 
-        // Welcome message with username
         Label welcomeLabel = new Label("Welcome " + username + " to the Manager Dashboard!");
         Label messageLabel = new Label();
 
-        // PTO Button to open new window
         Button ptoButton = new Button("PTO");
         ptoButton.setOnAction(e -> openPTOWindow());
 
-        // PTO Request Review Button to open new window
         Button reviewRequestsButton = new Button("Review PTO Requests");
         reviewRequestsButton.setOnAction(e -> openRequestReviewWindow());
 
-        // Logout Button
         Button logoutButton = new Button("Logout");
         logoutButton.setOnAction(e -> logout(primaryStage));
 
-        // Approve/Deny PTO functionality
+
         Label approvePTOLabel = new Label("Review PTO Requests:");
         TextArea requestList = new TextArea();
         requestList.setEditable(false);
@@ -54,7 +50,7 @@ public class ManagerHome extends EmployeeHome {
         Button approveRequestButton = new Button("Approve");
         Button denyRequestButton = new Button("Deny");
 
-        // Submit Employee Review button
+
         Button employeeReviewButton = new Button("View/Submit Employee Reviews");
         employeeReviewButton.setOnAction(e -> openEmployeeReviewWindow());
 
@@ -62,7 +58,7 @@ public class ManagerHome extends EmployeeHome {
         approveRequestButton.setOnAction(e -> handleRequest(requestList, true, messageLabel));
         denyRequestButton.setOnAction(e -> handleRequest(requestList, false, messageLabel));
 
-        // Layout
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
@@ -74,7 +70,7 @@ public class ManagerHome extends EmployeeHome {
         grid.add(employeeReviewButton, 0, 3);
         grid.add(logoutButton, 0, 4);
 
-        // Set the scene and show the stage
+
         Scene scene = new Scene(grid, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -87,19 +83,15 @@ public class ManagerHome extends EmployeeHome {
 
         Label messageLabel = new Label();
 
-        // ComboBox for selecting a request
         ComboBox<String> requestComboBox = new ComboBox<>();
         requestComboBox.setPromptText("Select a request to review");
 
-        // Buttons for approving and denying requests
         Button loadRequestsButton = new Button("Load PTO Requests");
         Button approveRequestButton = new Button("Approve");
         Button denyRequestButton = new Button("Deny");
 
-        // Load requests into ComboBox
         loadRequestsButton.setOnAction(e -> loadPTORequestsIntoComboBox(requestComboBox));
 
-        // Approve the selected request
         approveRequestButton.setOnAction(e -> {
             String selectedRequest = requestComboBox.getSelectionModel().getSelectedItem();
             if (selectedRequest == null) {
@@ -110,7 +102,6 @@ public class ManagerHome extends EmployeeHome {
             }
         });
 
-        // Deny the selected request
         denyRequestButton.setOnAction(e -> {
             String selectedRequest = requestComboBox.getSelectionModel().getSelectedItem();
             if (selectedRequest == null) {
@@ -121,7 +112,6 @@ public class ManagerHome extends EmployeeHome {
             }
         });
 
-        // Layout
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
@@ -134,7 +124,6 @@ public class ManagerHome extends EmployeeHome {
         grid.add(denyRequestButton, 1, 3);
         grid.add(messageLabel, 0, 4, 2, 1);
 
-        // Set scene and show stage
         Scene scene = new Scene(grid, 500, 400);
         reviewStage.setScene(scene);
         reviewStage.show();
@@ -145,17 +134,14 @@ public class ManagerHome extends EmployeeHome {
         Stage reviewStage = new Stage();
         reviewStage.setTitle("Employee Reviews");
 
-        // Layout for the main buttons
         GridPane mainGrid = new GridPane();
         mainGrid.setAlignment(Pos.CENTER);
         mainGrid.setVgap(10);
         mainGrid.setHgap(10);
 
-        // Buttons for "View Employee Reviews" and "Submit Employee Reviews"
         Button viewReviewsButton = new Button("View Employee Reviews");
         Button submitReviewButton = new Button("Submit Employee Review");
 
-        // Action for "View Employee Reviews"
         viewReviewsButton.setOnAction(e -> {
             Stage viewStage = new Stage();
             viewStage.setTitle("View Employee Reviews");
@@ -176,12 +162,10 @@ public class ManagerHome extends EmployeeHome {
             viewStage.show();
         });
 
-        // Action for "Submit Employee Reviews"
         submitReviewButton.setOnAction(e -> {
             Stage submitStage = new Stage();
             submitStage.setTitle("Submit Employee Review");
 
-            // Fields for the employee review
             Label nameLabel = new Label("Employee Name:");
             TextField nameField = new TextField();
 
@@ -196,7 +180,6 @@ public class ManagerHome extends EmployeeHome {
 
             Label messageLabel = new Label();
 
-            // Submit button to save the review
             Button submitButton = new Button("Submit Review");
             submitButton.setOnAction(ev -> {
                 String name = nameField.getText();
@@ -246,11 +229,9 @@ public class ManagerHome extends EmployeeHome {
             submitStage.show();
         });
 
-        // Add buttons to the main layout
         mainGrid.add(viewReviewsButton, 0, 0);
         mainGrid.add(submitReviewButton, 0, 1);
 
-        // Set scene and show stage
         Scene mainScene = new Scene(mainGrid, 300, 200);
         reviewStage.setScene(mainScene);
         reviewStage.show();
@@ -305,26 +286,21 @@ public class ManagerHome extends EmployeeHome {
         JSONParser parser = new JSONParser();
         JSONArray reviews;
 
-        // Read existing JSON data from the file
         try (FileReader reader = new FileReader(filePath)) {
             Object obj = parser.parse(reader);
             reviews = (JSONArray) obj;
         } catch (Exception e) {
-            // If the file doesn't exist or is empty, create a new array
             reviews = new JSONArray();
         }
 
-        // Create the new review
         JSONObject review = new JSONObject();
         review.put("Employee Name", name);
         review.put("Employee ID", id);
         review.put("Review Rating", rating);
         review.put("Review Notes", notes);
 
-        // Add the new review to the array
         reviews.add(review);
 
-        // Write the updated array back to the file
         try (FileWriter file = new FileWriter(filePath)) {
             file.write(reviews.toJSONString());
             file.flush();
@@ -338,25 +314,20 @@ public class ManagerHome extends EmployeeHome {
         JSONParser parser = new JSONParser();
         JSONArray ptoRequests;
 
-        // Read existing JSON data from the file
         try (FileReader reader = new FileReader(filePath)) {
             Object obj = parser.parse(reader);
             ptoRequests = (JSONArray) obj;
         } catch (Exception e) {
-            // If the file doesn't exist or is empty, create a new array
             ptoRequests = new JSONArray();
         }
 
-        // Create the new PTO request
         JSONObject ptoRequest = new JSONObject();
         ptoRequest.put("Username", username);
         ptoRequest.put("Date Range", startDate + " to " + endDate);
         ptoRequest.put("Total Hours Requested", totalRequestedHours);
 
-        // Add the new request to the array
         ptoRequests.add(ptoRequest);
 
-        // Write the updated array back to the file
         try (FileWriter file = new FileWriter(filePath)) {
             file.write(ptoRequests.toJSONString());
             file.flush();
@@ -381,7 +352,6 @@ public class ManagerHome extends EmployeeHome {
                 displayText.append("Dates: ").append(request.get("Date Range")).append(", ");
                 displayText.append("Hours: ").append(request.get("Total Hours Requested")).append("\n");
             }
-
             requestList.setText(displayText.toString());
         } catch (Exception e) {
             requestList.setText("Error loading PTO requests: " + e.getMessage());
@@ -395,7 +365,6 @@ public class ManagerHome extends EmployeeHome {
             return;
         }
 
-        // Parse the first request for simplicity
         String selectedRequest = requests[0];
         String[] requestDetails = selectedRequest.split(", ");
         if (approve) {
@@ -414,10 +383,8 @@ public class ManagerHome extends EmployeeHome {
             messageLabel.setText("Denied: " + selectedRequest);
         }
 
-        // Remove the processed request from the JSON file
         removeRequestFromFile(selectedRequest);
 
-        // Reload the request list
         loadPTORequests(requestList);
     }
 
@@ -440,7 +407,6 @@ public class ManagerHome extends EmployeeHome {
             messageLabel.setText("Denied: " + selectedRequest);
         }
 
-        // Remove the processed request from the JSON file
         removeRequestFromFile(selectedRequest);
     }
 
@@ -472,11 +438,9 @@ public class ManagerHome extends EmployeeHome {
         JSONArray ptoRequests;
 
         try (FileReader reader = new FileReader(filePath)) {
-            // Read existing requests from the file
             Object obj = parser.parse(reader);
             ptoRequests = (JSONArray) obj;
 
-            // Find and remove the matching request
             for (int i = 0; i < ptoRequests.size(); i++) {
                 JSONObject request = (JSONObject) ptoRequests.get(i);
 
@@ -484,7 +448,6 @@ public class ManagerHome extends EmployeeHome {
                 String dateRange = (String) request.get("Date Range");
                 double totalHours = (double) request.get("Total Hours Requested");
 
-                // Match the request string to the JSON object
                 String jsonString = "User: " + username + ", Dates: " + dateRange + ", Hours: " + totalHours;
                 if (selectedRequest.contains(jsonString)) {
                     ptoRequests.remove(i);
@@ -492,7 +455,6 @@ public class ManagerHome extends EmployeeHome {
                 }
             }
 
-            // Write the updated list back to the file
             try (FileWriter writer = new FileWriter(filePath)) {
                 writer.write(ptoRequests.toJSONString());
                 writer.flush();

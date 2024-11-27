@@ -18,8 +18,8 @@ import java.time.temporal.ChronoUnit;
 
 public class EmployeeHome {
 
-    private double ptoBalance = 40.0; // 40 hours of PTO remaining
-    private String username = "Jane Doe"; // Employee's username
+    private double ptoBalance = 40.0;
+    private String username = "Jane Doe";
 
     public EmployeeHome() {
         this.username = username;
@@ -28,20 +28,16 @@ public class EmployeeHome {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Employee Dashboard");
 
-        // Create UI elements
         Label welcomeLabel = new Label("Welcome " + username + " to the Employee Dashboard!");
 
-        // PTO Button
         Button ptoButton = new Button("PTO");
         ptoButton.setOnAction(e -> openPTOWindow());
         Button viewReviewsButton = new Button("View Employee Reviews");
         viewReviewsButton.setOnAction(e -> viewEmployeeReviews());
 
-        // Logout Button
         Button logoutButton = new Button("Logout");
         logoutButton.setOnAction(e -> logout(primaryStage));
 
-        // Layout
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
@@ -52,7 +48,6 @@ public class EmployeeHome {
         grid.add(viewReviewsButton, 0, 2);
         grid.add(logoutButton, 0, 3);
 
-        // Set scene and show stage
         Scene scene = new Scene(grid, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -62,18 +57,15 @@ public class EmployeeHome {
         Stage reviewStage = new Stage();
         reviewStage.setTitle("Employee Reviews");
 
-        // TextArea to display the reviews
         TextArea reviewTextArea = new TextArea();
         reviewTextArea.setEditable(false);
 
-        // Load the reviews from the JSON file
         String filePath = "EmployeeReviews.json";
         JSONParser parser = new JSONParser();
 
         try (FileReader reader = new FileReader(filePath)) {
             Object obj = parser.parse(reader);
 
-            // Check if the root is an object or an array
             JSONArray employeeReviews;
             if (obj instanceof JSONObject) {
                 JSONObject rootObject = (JSONObject) obj;
@@ -84,7 +76,6 @@ public class EmployeeHome {
                 throw new IllegalArgumentException("Invalid JSON structure");
             }
 
-            // Format and display the reviews
             StringBuilder reviewsContent = new StringBuilder();
             for (Object reviewObj : employeeReviews) {
                 JSONObject review = (JSONObject) reviewObj;
@@ -99,7 +90,6 @@ public class EmployeeHome {
             reviewTextArea.setText("Error loading reviews: " + e.getMessage());
         }
 
-        // Layout
         ScrollPane scrollPane = new ScrollPane(reviewTextArea);
         Scene scene = new Scene(scrollPane, 600, 400);
         reviewStage.setScene(scene);
@@ -114,11 +104,11 @@ public class EmployeeHome {
 
         Label messageLabel = new Label();
 
-        // View PTO functionality
+
         Button viewPTOButton = new Button("View PTO Balance");
         viewPTOButton.setOnAction(e -> messageLabel.setText("PTO Balance: " + ptoBalance + " hours"));
 
-        // Request PTO functionality with date selection
+
         Label requestPTOLabel = new Label("Submit PTO Request:");
         DatePicker startDatePicker = new DatePicker();
         startDatePicker.setPromptText("Start Date");
@@ -149,7 +139,7 @@ public class EmployeeHome {
             }
         });
 
-        // Layout
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
@@ -162,7 +152,7 @@ public class EmployeeHome {
         grid.add(requestPTOButton, 0, 3, 2, 1);
         grid.add(messageLabel, 0, 4, 2, 1);
 
-        // Set scene and show stage
+
         Scene scene = new Scene(grid, 400, 300);
         ptoStage.setScene(scene);
         ptoStage.show();
@@ -196,7 +186,7 @@ public class EmployeeHome {
     }
 
     void logout(Stage primaryStage) {
-        // Start the SignInPage
+
         SignInPage signInPage = new SignInPage(); // Assuming you have a SignInPage class
         signInPage.start(primaryStage); // Restart the SignInPage in the same stage
     }

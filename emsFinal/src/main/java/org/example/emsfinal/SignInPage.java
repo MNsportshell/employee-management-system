@@ -20,19 +20,15 @@ public class SignInPage extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Company Sign-In");
-
-        // Create UI elements
+        primaryStage.setTitle("Employee Management System - Sign-In");
         Label usernameLabel = new Label("Username:");
         TextField usernameField = new TextField();
-
         Label passwordLabel = new Label("Password:");
         PasswordField passwordField = new PasswordField();
 
         Button loginButton = new Button("Sign In");
         Label messageLabel = new Label();
 
-        // Create layout
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
@@ -45,7 +41,6 @@ public class SignInPage extends Application {
         grid.add(loginButton, 1, 2);
         grid.add(messageLabel, 1, 3);
 
-        // Button action
         loginButton.setOnAction(event -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
@@ -58,7 +53,6 @@ public class SignInPage extends Application {
             }
         });
 
-        // Set scene and stage
         Scene scene = new Scene(grid, 400, 250);
         primaryStage.setScene(scene);
         primaryStage.show();
